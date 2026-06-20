@@ -1,0 +1,402 @@
+/* ═══════════════════════════════════════════
+   EV Station Details — book_now.css
+   ═══════════════════════════════════════════ */
+
+/* ── Base ──────────────────────────────────── */
+body {
+    background: #f4fff6;
+    font-family: Arial, sans-serif;
+}
+
+/* ── Main Card ─────────────────────────────── */
+.station-card {
+    background: white;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 35px;
+}
+
+/* ── Image ─────────────────────────────────── */
+.image-section img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+}
+
+/* ── Details ───────────────────────────────── */
+.details-section {
+    padding: 35px;
+}
+
+/* ── Top ───────────────────────────────────── */
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.station-name {
+    color: #0f8f3c;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.location {
+    color: gray;
+    font-size: 18px;
+}
+
+.rating-box {
+    background: #0f8f3c;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+/* ── Info Grid ─────────────────────────────── */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.info-box {
+    background: #f4fff6;
+    border: 1px solid #d4f2dd;
+    border-radius: 16px;
+    padding: 22px;
+}
+
+.info-box h6 {
+    color: #0f8f3c;
+    margin-bottom: 10px;
+}
+
+.info-box p {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ── About ─────────────────────────────────── */
+.about-section {
+    margin-top: 40px;
+}
+
+.about-section h3 {
+    color: #0f8f3c;
+    margin-bottom: 15px;
+}
+
+/* ── Amenities ─────────────────────────────── */
+.amenities-section {
+    margin-top: 35px;
+}
+
+.amenities-section h3 {
+    color: #0f8f3c;
+    margin-bottom: 18px;
+}
+
+.amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.amenities span {
+    background: #0f8f3c;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+}
+
+/* ══════════════════════════════════════════════
+   DATE STRIP
+   ══════════════════════════════════════════════ */
+
+.date-strip-section {
+    margin-top: 38px;
+}
+
+.date-strip-section h3 {
+    color: #0f8f3c;
+    margin-bottom: 14px;
+}
+
+.date-strip-outer {
+    background: #fff;
+    border: 1px solid #d4f2dd;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.date-strip {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.date-strip::-webkit-scrollbar {
+    display: none;
+}
+
+/* ── Date Chip ─────────────────────────────── */
+.date-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 22px;
+    cursor: pointer;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    font-family: Arial, sans-serif;
+    color: #6b7280;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.date-chip .dc-name {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.date-chip .dc-num {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #1a1a1a;
+    transition: color 0.15s;
+}
+
+.date-chip .dc-mon {
+    font-size: 10px;
+    margin-top: 2px;
+}
+
+.date-chip:hover {
+    background: #e8f5ee;
+}
+
+.date-chip.active {
+    background: #0f8f3c;
+    border-bottom-color: #0c6d2e;
+}
+
+.date-chip.active .dc-name,
+.date-chip.active .dc-num,
+.date-chip.active .dc-mon {
+    color: #fff;
+}
+
+/* ── Selected Label ────────────────────────── */
+.date-selected-label {
+    padding: 10px 18px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.date-selected-label strong {
+    color: #0f8f3c;
+    font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════
+   SLOT LEGEND
+   ══════════════════════════════════════════════ */
+
+.slot-legend {
+    display: flex;
+    gap: 18px;
+    margin-top: 20px;
+    margin-bottom: 6px;
+}
+
+.leg-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.leg-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.leg-dot.av { background: #0f8f3c; }
+.leg-dot.bk { background: #c0392b; }
+
+/* ══════════════════════════════════════════════
+   SLOTS SECTION
+   ══════════════════════════════════════════════ */
+
+.slots-section {
+    margin-top: 20px;
+}
+
+.slots-section h3 {
+    color: #0f8f3c;
+    margin-bottom: 16px;
+}
+
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+/* ── Slot Card ─────────────────────────────── */
+.slot {
+    padding: 18px 20px;
+    border-radius: 16px;
+    color: white;
+    border: none;
+    text-align: left;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    transition: transform 0.12s;
+}
+
+.slot:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.slot:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.slot:disabled {
+    cursor: not-allowed;
+}
+
+.slot h5 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.slot p {
+    margin: 0 0 10px;
+    font-size: 13px;
+    opacity: 0.88;
+}
+
+.slot span {
+    display: inline-block;
+    background: rgba(255,255,255,0.22);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* Status colours */
+.slot.available    { background: #0f8f3c; }
+.slot.booked       { background: #c0392b; }
+.slot.unavailable  { background: #6b7280; }
+.slot.slot-selected {
+    background: #0c6d2e;
+    outline: 3px solid #fff;
+    box-shadow: 0 0 0 5px #0f8f3c;
+}
+
+/* ══════════════════════════════════════════════
+   BOOK ACTION
+   ══════════════════════════════════════════════ */
+
+.book-action {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.book-btn {
+    height: 50px;
+    padding: 0 32px;
+    border: none;
+    border-radius: 12px;
+    background: #0f8f3c;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.book-btn:hover:not(:disabled) {
+    background: #0c6d2e;
+}
+
+.book-btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.book-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.book-info {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.book-info strong {
+    color: #1a1a1a;
+}
+
+/* ══════════════════════════════════════════════
+   TOAST
+   ══════════════════════════════════════════════ */
+
+.ev-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #0c6d2e;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 9999;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.ev-toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════ */
+
+@media (max-width: 600px) {
+    .details-section { padding: 20px; }
+    .station-name    { font-size: 26px; }
+    .slots-grid      { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    .date-chip       { padding: 10px 14px; }
+    .book-action     { flex-direction: column; align-items: flex-start; }
+}

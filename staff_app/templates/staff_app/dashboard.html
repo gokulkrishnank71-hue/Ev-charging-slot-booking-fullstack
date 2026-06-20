@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Station Operations | EV Point</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f4f7fb; }
+    .hero { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; }
+    .metric { border: 0; border-radius: 1rem; }
+    .section-card { border: 0; border-radius: 1rem; box-shadow: 0 .25rem 1rem rgba(0,0,0,.06); }
+    .table td, .table th { vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-primary">
+    <div class="container-fluid px-lg-5">
+      <span class="navbar-brand fw-bold">⚡ EV Point Operations</span>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="btn btn-outline-light btn-sm">Logout</button>
+      </form>
+    </div>
+  </nav>
+
+  <main class="container-fluid px-lg-5 py-4">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+    {% endfor %}
+
+    <section class="hero rounded-4 p-4 mb-4">
+      <div class="d-md-flex justify-content-between align-items-center">
+        <div>
+          <p class="mb-1 opacity-75">Welcome, {{ profile.full_name }} · {{ profile.employee_id }}</p>
+          <h1 class="h2 mb-1">{{ station.station_name }}</h1>
+          <p class="mb-0">{{ station.city }} · {{ station.station_type }}</p>
+        </div>
+        <span class="badge bg-light text-primary fs-6 mt-3 mt-md-0">{{ station.get_operational_status_display }}</span>
+      </div>
+    </section>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-4"><div class="card metric p-3"><span class="text-muted">Today's bookings</span><strong class="fs-3">{{ today_booking_count }}</strong></div></div>
+      <div class="col-md-4"><div class="card metric p-3"><span class="text-muted">Active bookings</span><strong class="fs-3">{{ active_booking_count }}</strong></div></div>
+      <div class="col-md-4"><div class="card metric p-3"><span class="text-muted">Configured charging slots</span><strong class="fs-3">{{ slot_rows|length }}</strong></div></div>
+    </div>
+
+    <section class="card section-card p-4 mb-4">
+      <h2 class="h4">Live station status</h2>
+      <p class="text-muted">Clients see this status immediately on search and booking pages.</p>
+      <form method="post" action="{% url 'update_station_status' %}" class="row g-3">
+        {% csrf_token %}
+        <input type="hidden" name="selected_date" value="{{ selected_date|date:'Y-m-d' }}">
+        <div class="col-md-3">
+          <label class="form-label">Status</label>
+          <select class="form-select" name="operational_status" required>
+            {% for value, label in station_status_choices %}
+              <option value="{{ value }}" {% if station.operational_status == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-7">
+          <label class="form-label">Customer message</label>
+          <input class="form-control" name="status_message" maxlength="200" value="{{ station.status_message }}" placeholder="Example: Charger 2 is temporarily unavailable">
+        </div>
+        <div class="col-md-2 d-flex align-items-end"><button class="btn btn-primary w-100">Update</button></div>
+      </form>
+      {% if station.status_updated_at %}<small class="text-muted mt-3">Last updated {{ station.status_updated_at|date:'d M Y, h:i A' }} by {{ station.status_updated_by.username }}</small>{% endif %}
+    </section>
+
+    <section class="card section-card p-4 mb-4">
+      <div class="d-md-flex justify-content-between align-items-end mb-3">
+        <div>
+          <h2 class="h4 mb-1">Charging slot status</h2>
+          <p class="text-muted mb-0">Review operational and booking status for every slot.</p>
+        </div>
+        <form method="get" class="mt-3 mt-md-0">
+          <label class="form-label small mb-1" for="staff-date">Date</label>
+          <div class="input-group input-group-sm">
+            <select class="form-select" id="staff-date" name="date">
+              {% for option in date_options %}
+                <option value="{{ option|date:'Y-m-d' }}" {% if option == selected_date %}selected{% endif %}>{{ option|date:'D, d M Y' }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn btn-primary">View slots</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Slot</th><th>Time</th><th>Operational condition</th><th>Booking</th><th>Customer</th><th>Booking status</th></tr></thead>
+          <tbody>
+            {% for row in slot_rows %}
+              <tr>
+                <td>{{ row.slot.slot_name|title }}</td>
+                <td class="text-nowrap">{{ row.slot.start_time }} – {{ row.slot.end_time }}</td>
+                <td style="min-width: 240px;">
+                  <form method="post" action="{% url 'update_slot_status' row.slot.slot_id %}" class="d-flex flex-column gap-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="selected_date" value="{{ selected_date|date:'Y-m-d' }}">
+                    <div class="d-flex gap-2">
+                      <select class="form-select form-select-sm" name="status" aria-label="Operational status for {{ row.slot.slot_name }}">
+                        {% for value, label in slot_status_choices %}
+                          <option value="{{ value }}" {% if row.condition_value == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                      </select>
+                      <button class="btn btn-sm btn-outline-primary">Save</button>
+                    </div>
+                    <input class="form-control form-control-sm" name="note" maxlength="200" value="{{ row.station_status.note }}" placeholder="Optional note">
+                  </form>
+                </td>
+                <td>
+                  <span class="badge bg-{{ row.booking_badge }}{% if row.booking_badge == 'warning' %} text-dark{% endif %}">{{ row.booking_label }}</span>
+                  {% if row.booking %}<div class="small text-muted mt-1">#{{ row.booking.pk }}</div>{% endif %}
+                </td>
+                <td>{% if row.booking %}{{ row.booking.user.username }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                <td style="min-width: 210px;">
+                  {% if row.booking %}
+                    <form method="post" action="{% url 'update_booking_status' row.booking.pk %}" class="d-flex gap-2">
+                      {% csrf_token %}
+                      <input type="hidden" name="selected_date" value="{{ selected_date|date:'Y-m-d' }}">
+                      <select class="form-select form-select-sm" name="status" aria-label="Status for booking {{ row.booking.pk }}">
+                        {% for value, label in booking_status_choices %}<option value="{{ value }}" {% if row.booking.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                      </select>
+                      <button class="btn btn-sm btn-outline-primary">Update</button>
+                    </form>
+                  {% else %}<span class="text-muted">—</span>{% endif %}
+                </td>
+              </tr>
+            {% empty %}<tr><td colspan="6" class="text-muted">No charging slots have been configured.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card section-card p-4">
+      <h2 class="h4">Recent bookings</h2>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Booking</th><th>Client</th><th>Date and time</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            {% for booking in recent_bookings %}
+              <tr>
+                <td>#{{ booking.pk }}</td>
+                <td>{{ booking.user.username }}</td>
+                <td>{{ booking.date|date:'d M Y' }} · {{ booking.start_time }}–{{ booking.end_time }}</td>
+                  <td><select class="form-select form-select-sm" name="status" form="booking-form-{{ booking.pk }}">
+                    {% for value, label in booking_status_choices %}<option value="{{ value }}" {% if booking.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                  </select></td>
+                  <td><form id="booking-form-{{ booking.pk }}" method="post" action="{% url 'update_booking_status' booking.pk %}">{% csrf_token %}<input type="hidden" name="selected_date" value="{{ selected_date|date:'Y-m-d' }}"><button class="btn btn-sm btn-outline-primary">Update</button></form></td>
+              </tr>
+            {% empty %}<tr><td colspan="5" class="text-muted">No bookings yet.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

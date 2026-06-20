@@ -1,0 +1,10 @@
+      <a class="btn-getstarted" href="{% url 'signup' %}">Sign Up</a>
+      <a class="btn-getstarted" href="{% url 'login'%}">Login</a>
+
+      ____________super user login and signup links______________________
+
+      gokul@Gokuls-MacBook-Air main_ev_project % python3 manage.py createsuperuser
+Username (leave blank to use 'gokul'): admin
+Email address: admin@gmail.com
+Password: 12345
+Password (again): 12345

@@ -1,0 +1,226 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Find Stations</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'css/station_search.css' %}">
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-dark custom-navbar">
+
+  <div class="container">
+
+    <span class="navbar-brand fw-bold">
+      Find EV Stations
+    </span>
+
+  </div>
+
+</nav>
+
+
+<div class="container mt-4">
+
+  <!-- Search + Filter -->
+
+  <div class="search-box p-3 mb-4">
+
+    <div class="row g-2">
+
+      <!-- Search -->
+
+      <div class="col-md-6">
+
+        <div class="input-group">
+
+          <span class="input-group-text bg-white">
+            🔍
+          </span>
+
+          <input 
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="Search city..."
+          >
+
+        </div>
+
+      </div>
+
+      <!-- District Filter -->
+
+      <div class="col-md-6">
+
+        <select id="districtFilter" class="form-select">
+
+          <option value="">All Districts</option>
+
+          <option value="ernakulam">Ernakulam</option>
+          <option value="kozhikode">Kozhikode</option>
+          <option value="trivandrum">Trivandrum</option>
+          <option value="kollam">Kollam</option>
+          <option value="thrissur">Thrissur</option>
+          <option value="kannur">Kannur</option>
+          <option value="palakkad">Palakkad</option>
+          <option value="alappuzha">Alappuzha</option>
+          <option value="malappuram">Malappuram</option>
+          <option value="kasaragod">Kasaragod</option>
+          <option value="idukki">Idukki</option>
+          <option value="pathanamthitta">Pathanamthitta</option>
+          <option value="kottayam">Kottayam</option>
+          <option value="wayanad">Wayanad</option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Stations -->
+
+  <div class="row g-4">
+
+    {% for station in stations %}
+
+    <div 
+      class="col-md-4 station-item"
+      data-city="{{ station.city|lower }}"
+      data-district="{{ station.city|lower }}"
+    >
+
+      <div class="card station-card">
+
+        <div class="card-body text-center">
+
+          <h5>
+            {{ station.station_name }}
+          </h5>
+
+          <p>
+            <strong>City:</strong>
+            {{ station.city }}
+          </p>
+
+          <p>
+            <strong>Type:</strong>
+            {{ station.station_type }}
+          </p>
+
+          <p>
+            <strong>Slots:</strong>
+            {{ station.total_slots }}
+          </p>
+
+          <p>
+            <strong>Rate:</strong>
+            ₹{{ station.rate_per_unit }}
+          </p>
+
+          <p>
+            <strong>Current status:</strong>
+            <span class="badge {% if station.operational_status == 'open' %}bg-success{% else %}bg-warning text-dark{% endif %}">{{ station.get_operational_status_display }}</span>
+          </p>
+
+          {% if station.status_message %}<p class="text-muted small">{{ station.status_message }}</p>{% endif %}
+
+          <a href="{% url 'book_now' station.station_id %}" class="btn btn-primary w-100">
+    View
+</a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="text-center">
+
+      <h5>No stations available</h5>
+
+    </div>
+
+    {% endfor %}
+
+  </div>
+
+</div>
+
+
+<!-- JS -->
+
+<script>
+
+  const searchInput = document.getElementById('searchInput');
+
+  const districtFilter = document.getElementById('districtFilter');
+
+  const stations = document.querySelectorAll('.station-item');
+
+
+  function filterStations() {
+
+    const searchValue = searchInput.value.toLowerCase();
+
+    const selectedDistrict = districtFilter.value;
+
+
+    stations.forEach(station => {
+
+      const city = station.dataset.city;
+
+      const district = station.dataset.district;
+
+
+      const matchSearch = city.startsWith(searchValue);
+
+      const matchDistrict =
+        selectedDistrict === "" ||
+        district === selectedDistrict;
+
+
+      station.style.display =
+        (matchSearch && matchDistrict)
+        ? "block"
+        : "none";
+
+    });
+
+  }
+
+
+  searchInput.addEventListener(
+    'keyup',
+    filterStations
+  );
+
+  districtFilter.addEventListener(
+    'change',
+    filterStations
+  );
+
+</script>
+
+</body>
+
+</html>

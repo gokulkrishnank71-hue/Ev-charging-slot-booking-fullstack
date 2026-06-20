@@ -1,0 +1,44 @@
+body {
+  background: #f5f7f5;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.custom-navbar {
+  background: #14963a;
+}
+
+.search-box {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(20, 150, 58, 0.12);
+}
+
+.btn-filter {
+  background: #14963a;
+  color: white;
+  border: none;
+}
+
+.btn-filter:hover {
+  background: #0f7f31;
+}
+
+.station-card {
+  background: #ffffff;
+  border: 1px solid #d8eadc;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(20, 150, 58, 0.12);
+}
+
+.btn-primary {
+  background: #14963a;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #0f7f31;
+}
+
+h1, h2, h3, h4, h5 {
+  color: #14963a;
+}

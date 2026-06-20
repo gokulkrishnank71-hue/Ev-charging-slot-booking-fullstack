@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Station Staff | EV Point</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-dark bg-primary"><div class="container"><a class="navbar-brand" href="{% url 'owner_dashboard' %}">← Owner Dashboard</a><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-outline-light btn-sm">Logout</button></form></div></nav>
+  <main class="container py-5">
+    {% for message in messages %}<div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>{% endfor %}
+    <div class="d-flex justify-content-between align-items-center mb-4"><div><h1 class="h2">Station Staff</h1><p class="text-muted mb-0">Create an operational login for each station team member.</p></div><a class="btn btn-primary" href="{% url 'add_staff' %}">Add Staff</a></div>
+    <div class="card border-0 shadow-sm rounded-4 p-4"><div class="table-responsive"><table class="table align-middle">
+      <thead><tr><th>Employee</th><th>Station</th><th>Login username</th><th>Phone</th><th>Status</th><th></th></tr></thead>
+      <tbody>{% for staff in staff_members %}<tr><td><strong>{{ staff.full_name }}</strong><br><small class="text-muted">{{ staff.employee_id }}</small></td><td>{{ staff.station.station_name }}</td><td>{{ staff.user.username }}</td><td>{{ staff.phone }}</td><td>{% if staff.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td><td><form method="post" action="{% url 'toggle_staff' staff.pk %}">{% csrf_token %}<button class="btn btn-sm {% if staff.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}">{% if staff.is_active %}Deactivate{% else %}Activate{% endif %}</button></form></td></tr>{% empty %}<tr><td colspan="6" class="text-muted text-center py-4">No staff accounts yet.</td></tr>{% endfor %}</tbody>
+    </table></div></div>
+  </main>
+</body>
+</html>

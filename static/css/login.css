@@ -1,0 +1,189 @@
+* {
+  box-sizing: border-box;
+}
+
+/* Body */
+body {
+  min-height: 100vh;
+  background: #f4faf4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  padding: 1.5rem 0.8rem;
+}
+
+/* Card */
+.signup-card {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 8px 40px rgba(34, 139, 34, 0.12), 0 2px 8px rgba(0,0,0,0.06);
+  width: 100%;
+  max-width: 400px;
+  padding: 2.2rem 1.8rem 1.8rem;
+}
+
+/* Icon */
+.icon-circle {
+  width: 68px;
+  height: 68px;
+  background: #e8f5e9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.icon-circle svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* Title */
+.card-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1b5e20;
+  text-align: center;
+  margin-bottom: 0.3rem;
+}
+
+.card-subtitle {
+  text-align: center;
+  color: #888;
+  font-size: 0.92rem;
+  margin-bottom: 1.4rem;
+}
+
+/* Form */
+form {
+  margin-top: 8px;
+}
+
+/* Input wrapper */
+.input-wrap {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+/* Icon inside input */
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.input-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Input */
+.form-field {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.6rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: #333;
+  background: #fff;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-field::placeholder {
+  color: #bbb;
+}
+
+.form-field:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+/* Toggle password */
+.toggle-pw {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-pw:hover {
+  color: #2e7d32;
+}
+
+.toggle-pw svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Button */
+.btn-signup {
+  width: 100%;
+  padding: 0.8rem;
+  background: #2e7d32;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.4rem;
+}
+
+.btn-signup:hover {
+  background: #1b5e20;
+  transform: translateY(-1px);
+}
+
+.btn-signup:active {
+  transform: scale(0.98);
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 1.3rem 0 0.9rem;
+  color: #bbb;
+  font-size: 0.82rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e8e8e8;
+}
+
+/* Bottom text */
+.login-text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.login-text a {
+  color: #2e7d32;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,235 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Station Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/book_now.css' %}">
+</head>
+<body>
+
+<div class="container py-5">
+<div class="station-card">
+
+    <!-- Image -->
+    <div class="image-section">
+        <img src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?q=80&w=1200&auto=format&fit=crop" alt="EV Station">
+    </div>
+
+    <!-- Details -->
+    <div class="details-section">
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger mt-3" role="alert">
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-{{ message.tags }} mt-3" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <!-- Top -->
+        <div class="top-section">
+            <div>
+                <h1 class="station-name">{{ station.station_name }}</h1>
+                <p class="location">{{ station.city }}</p>
+            </div>
+            <div class="rating-box">
+                {{ station.get_operational_status_display }}
+            </div>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="info-grid">
+            <div class="info-box">
+                <h6>Charger Type</h6>
+                <p>{{ station.station_type }}</p>
+            </div>
+            <div class="info-box">
+                <h6>Total Slots</h6>
+                <p>{{ station.total_slots }} Slots</p>
+            </div>
+            <div class="info-box">
+                <h6>Rate Per Unit</h6>
+                <p>₹{{ station.rate_per_unit }} / kWh</p>
+            </div>
+        </div>
+
+        <!-- About -->
+        <div class="about-section">
+            <h3>About Station</h3>
+            <p>
+                {{ station.station_name }} is a reliable EV charging station located in
+                {{ station.city }} with {{ station.station_type }} support and
+                {{ station.total_slots }} charging slots for electric vehicles.
+            </p>
+            {% if station.status_message %}<div class="alert alert-info">{{ station.status_message }}</div>{% endif %}
+        </div>
+
+        <!-- Amenities -->
+        <div class="amenities-section">
+            <h3>Amenities</h3>
+            <div class="amenities">
+                <span>⚡ Fast Charging</span>
+                <span>🚗 Parking</span>
+                <span>☕ Cafe</span>
+                <span>📶 WiFi</span>
+                <span>👱 Security</span>
+            </div>
+        </div>
+
+        <!-- DATE STRIP -->
+        <div class="date-strip-section">
+            <h3>Select Date</h3>
+            <div class="date-strip-outer">
+                <div class="date-strip" id="dateStrip"></div>
+                <div class="date-selected-label">
+                    📅 Showing slots for <strong id="selectedDateText">—</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLOT LEGEND -->
+        <div class="slot-legend">
+            <div class="leg-item"><span class="leg-dot av"></span> Available</div>
+            <div class="leg-item"><span class="leg-dot bk"></span> Booked</div>
+            <div class="leg-item"><span class="leg-dot bk"></span> Unavailable / maintenance</div>
+        </div>
+
+        <!-- SLOTS SECTION -->
+        <div class="slots-section">
+            <h3>Available Charging Slots</h3>
+            <div class="slots-grid" id="slotsGrid"></div>
+        </div>
+
+        <!-- BOOK BUTTON -->
+        <div class="book-action">
+            <form method="post" id="slotBookingForm" class="d-flex flex-column align-items-start">
+                {% csrf_token %}
+                <input type="hidden" name="selected_date" id="selectedDateInput">
+                <input type="hidden" name="selected_slot" id="selectedSlotInput">
+                <input type="hidden" name="selected_start" id="selectedStartInput">
+                <input type="hidden" name="selected_end" id="selectedEndInput">
+                <button type="submit" class="book-btn" id="bookBtn" disabled {% if station.operational_status != 'open' %}title="Station is not open"{% endif %}>
+                    🔋 Book Slot
+                </button>
+            </form>
+            <p class="book-info" id="bookInfo">Select a date and an available slot to book.</p>
+        </div>
+
+    </div><!-- end details-section -->
+</div><!-- end station-card -->
+</div><!-- end container -->
+
+<script>
+const SLOT_DATA = {{ slots_json|safe }};
+const _TODAY   = new Date('{{ start_date }}');
+const _DAYS    = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const _MONTHS  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function getSlotsForDay(dayIndex) {
+    return SLOT_DATA[dayIndex] || [];
+}
+
+var _selDay  = 0;
+var _selSlot = null;
+
+function buildStrip() {
+    var strip = document.getElementById('dateStrip');
+    strip.innerHTML = '';
+    for (var i = 0; i < 7; i++) {
+        var d = new Date(_TODAY);
+        d.setDate(_TODAY.getDate() + i);
+        var btn = document.createElement('button');
+        btn.className = 'date-chip' + (i === _selDay ? ' active' : '');
+        btn.innerHTML =
+            '<span class="dc-name">' + _DAYS[d.getDay()]     + '</span>' +
+            '<span class="dc-num">'  + d.getDate()           + '</span>' +
+            '<span class="dc-mon">'  + _MONTHS[d.getMonth()] + '</span>';
+        (function(idx) { btn.onclick = function() {
+            _selDay = idx; _selSlot = null;
+            buildStrip(); buildSlots(); updateBook();
+        }; })(i);
+        strip.appendChild(btn);
+    }
+    var dd = new Date(_TODAY);
+    dd.setDate(_TODAY.getDate() + _selDay);
+    document.getElementById('selectedDateText').textContent =
+        _DAYS[dd.getDay()] + ', ' + dd.getDate() + ' ' +
+        _MONTHS[dd.getMonth()] + ' ' + dd.getFullYear();
+}
+
+function buildSlots() {
+    var grid  = document.getElementById('slotsGrid');
+    var slots = getSlotsForDay(_selDay);
+    grid.innerHTML = '';
+    if (!slots.length) {
+        grid.innerHTML = '<div class="alert alert-secondary w-100 mb-0">No remaining slots for this date.</div>';
+        return;
+    }
+    slots.forEach(function(slot, idx) {
+        var isSel = _selSlot === idx;
+        var card  = document.createElement('button');
+        card.className = 'slot ' + slot.status + (isSel ? ' slot-selected' : '');
+        card.disabled  = slot.status !== 'available';
+        var badge = slot.status === 'booked' ? '✗ Booked'
+                  : slot.status === 'unavailable' ? '✗ Unavailable'
+                  : isSel                    ? '✓ Selected'
+                  :                            '✓ Available';
+        card.innerHTML =
+            '<h5>' + slot.slot_name + '</h5>' +
+            '<p>'  + slot.time + '</p>' +
+            '<span>' + badge + '</span>';
+        if (slot.status === 'available') {
+            (function(i) { card.onclick = function() {
+                _selSlot = (_selSlot === i) ? null : i;
+                buildSlots(); updateBook();
+            }; })(idx);
+        }
+        grid.appendChild(card);
+    });
+}
+
+function updateBook() {
+    var btn  = document.getElementById('bookBtn');
+    var info = document.getElementById('bookInfo');
+    var dateInput = document.getElementById('selectedDateInput');
+    var slotInput = document.getElementById('selectedSlotInput');
+    var startInput = document.getElementById('selectedStartInput');
+    var endInput = document.getElementById('selectedEndInput');
+
+    if (_selSlot !== null) {
+        var s = getSlotsForDay(_selDay)[_selSlot];
+        var dd = new Date(_TODAY);
+        dd.setDate(_TODAY.getDate() + _selDay);
+        btn.disabled = {% if station.operational_status == 'open' %}false{% else %}true{% endif %};
+        dateInput.value = dd.toISOString().slice(0, 10);
+        slotInput.value = s.slot_name;
+        startInput.value = s.start_time;
+        endInput.value = s.end_time;
+        info.innerHTML = 'Booking <strong>' + s.slot_name + '</strong> &middot; ' +
+            s.time + ' &middot; ' + _DAYS[dd.getDay()] + ', ' +
+            dd.getDate() + ' ' + _MONTHS[dd.getMonth()];
+    } else {
+        btn.disabled = true;
+        dateInput.value = '';
+        slotInput.value = '';
+        startInput.value = '';
+        endInput.value = '';
+        info.textContent = 'Select a date and an available slot to book.';
+    }
+}
+
+buildStrip(); buildSlots(); updateBook();
+</script>
+
+</body>
+</html>

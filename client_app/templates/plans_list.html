@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Membership Plans</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+
+    body {
+      background: #eef4ff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .membership-card {
+      transition: 0.3s ease;
+      overflow: hidden;
+      background: #ffffff;
+      border: none;
+    }
+
+    .membership-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .featured-plan {
+      border: 2px solid #1976d2;
+    }
+
+    .plan-badge,
+    .popular-tag,
+    .premium-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #1976d2;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .premium-badge {
+      background: #0d47a1;
+    }
+
+    .popular-tag {
+      background: #1565c0;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 10px;
+    }
+
+    .feature-item i {
+      font-size: 18px;
+      color: #1976d2;
+    }
+
+    .btn-primary {
+      background: #1976d2;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: #0d47a1;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<!-- Membership Plans Section -->
+<section id="membership" class="py-5">
+
+  <!-- Section Title -->
+  <div class="container text-center mb-5">
+    <h2 class="fw-bold">Membership Plans</h2>
+
+    <p class="text-muted">
+      Choose a membership plan and enjoy faster EV charging slot bookings
+    </p>
+  </div>
+
+  <div class="container">
+
+    <div class="row g-4 justify-content-center">
+
+      <!-- 1 Month Plan -->
+      <div class="col-lg-4 col-md-6">
+        <div class="membership-card shadow-lg rounded-4 p-4 h-100 position-relative">
+
+          <div class="plan-badge">
+            Basic
+          </div>
+
+          <div class="text-center mb-4">
+            <i class="bi bi-lightning-charge-fill display-3 text-primary"></i>
+          </div>
+
+          <h3 class="text-center fw-bold">
+            1 Month
+          </h3>
+
+          <div class="text-center my-3">
+            <span class="display-5 fw-bold">
+              ₹299
+            </span>
+
+            <p class="text-muted mb-0">
+              Per Month
+            </p>
+          </div>
+
+          <div class="plan-features mt-4">
+
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Priority Slot Booking</span>
+            </div>
+
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Access to Nearby Stations</span>
+            </div>
+
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Basic Customer Support</span>
+            </div>
+
+          </div>
+
+          <div class="text-center mt-4">
+            <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">
+              Choose Plan
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 3 Month Plan -->
+      <div class="col-lg-4 col-md-6">
+        <div class="membership-card featured-plan shadow-lg rounded-4 p-4 h-100 position-relative">
+
+          <div class="popular-tag">
+            Most Popular
+          </div>
+
+          <div class="text-center mb-4">
+            <i class="bi bi-ev-front-fill display-3 text-primary"></i>
+          </div>
+
+          <h3 class="text-center fw-bold">
+            3 Months
+          </h3>
+
+          <div class="text-center my-3">
+            <span class="display-5 fw-bold">
+              ₹799
+            </span>
+
+            <p class="text-muted mb-0">
+              Save More
+            </p>
+          </div>
+
+          <div class="plan-features mt-4">
+
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Unlimited Slot Booking</span>
+            </div>
+
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Priority Charging Queue</span>
+            </div>
+
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Dedicated Support</span>
+            </div>
+
+          </div>
+
+          <div class="text-center mt-4">
+            <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">
+              Choose Plan
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 6 Month Plan -->
+      <div class="col-lg-4 col-md-6">
+        <div class="membership-card shadow-lg rounded-4 p-4 h-100 position-relative">
+
+          <div class="premium-badge">
+            Premium
+          </div>
+
+          <div class="text-center mb-4">
+            <i class="bi bi-stars display-3 text-primary"></i>
+          </div>
+
+          <h3 class="text-center fw-bold">
+            6 Months
+          </h3>
+
+          <div class="text-center my-3">
+            <span class="display-5 fw-bold">
+              ₹1499
+            </span>
+
+            <p class="text-muted mb-0">
+              Best Value
+            </p>
+          </div>
+
+          <div class="plan-features mt-4">
+
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Maximum Booking Priority</span>
+            </div>
+
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Discounted Charging Rates</span>
+            </div>
+
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>24/7 Premium Support</span>
+            </div>
+
+          </div>
+
+          <div class="text-center mt-4">
+            <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">
+              Choose Plan
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
