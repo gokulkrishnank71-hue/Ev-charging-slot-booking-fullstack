@@ -5,7 +5,6 @@ from django.views.decorators.http import require_POST
 from django.utils import timezone
 from .models import EVStation
 from home.models import OwnerProfile
-from home.decorators import owner_required
 from client_app.models import Booking
 from staff_app.models import StationStaffProfile
 from staff_app.slot_status import build_slot_status_rows, selected_booking_date
@@ -20,7 +19,6 @@ from .forms import StationStaffCreateForm
 # Owner Dashboard View
 # Displays dashboard for authenticated station owners
 # ==================================================
-@owner_required
 def owner_dashboard(request):
 
     # Allow access only to logged-in owners
@@ -65,7 +63,6 @@ def owner_dashboard(request):
 # Add Station View
 # Creates a new EV charging station for the owner
 # ==================================================
-@owner_required
 def add_station(request):
 
     # Process station registration form submission
@@ -100,7 +97,6 @@ def add_station(request):
     return render(request, 'owner_app/add_station.html')
 
 
-@owner_required
 def manage_staff(request):
     owner = request.user.ownerprofile
     staff_members = StationStaffProfile.objects.filter(
@@ -109,7 +105,6 @@ def manage_staff(request):
     return render(request, 'owner_app/manage_staff.html', {'staff_members': staff_members})
 
 
-@owner_required
 def add_staff(request):
     owner = request.user.ownerprofile
     if request.method == 'POST':
@@ -124,7 +119,6 @@ def add_staff(request):
 
 
 @require_POST
-@owner_required
 def toggle_staff(request, staff_id):
     owner = request.user.ownerprofile
     staff = get_object_or_404(StationStaffProfile, pk=staff_id, created_by=owner)

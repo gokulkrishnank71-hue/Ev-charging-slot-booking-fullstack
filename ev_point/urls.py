@@ -9,4 +9,10 @@ urlpatterns = [
     path('client/',include('client_app.urls')),
     path('owner/',include('owner_app.urls')),
     path('staff/',include('staff_app.urls')),
+
+
+    path("api/", include("home.api_urls")),
+    path("api/client/", include("client_app.api_urls")),
+    path("api/owner/", include("owner_app.api_urls")),
+    path("api/staff/", include("staff_app.api_urls")),
 ]

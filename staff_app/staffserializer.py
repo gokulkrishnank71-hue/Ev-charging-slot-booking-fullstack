@@ -1,33 +1,36 @@
 from rest_framework import serializers
 
-from .models import StationStaffProfile
+from staff_app.models import (
+    StationSlotStatus,
+    StationStaffProfile,
+)
 
 
-class StaffSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField(read_only=True)
-    username = serializers.CharField(source='user.username', read_only=True)
-    email = serializers.EmailField(source='user.email', read_only=True)
-    station_id = serializers.IntegerField(read_only=True)
-    station_name = serializers.CharField(
-        source='station.station_name',
+class StationStaffSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        source="user.username",
         read_only=True,
     )
-    created_by_id = serializers.IntegerField(read_only=True)
+    station_name = serializers.CharField(
+        source="station.station_name",
+        read_only=True,
+    )
 
     class Meta:
         model = StationStaffProfile
-        fields = [
-            'id',
-            'user_id',
-            'username',
-            'email',
-            'station_id',
-            'station_name',
-            'created_by_id',
-            'full_name',
-            'phone',
-            'employee_id',
-            'is_active',
-            'created_at',
-        ]
-        read_only_fields = fields
+        fields = "__all__"
+
+
+class StationSlotStatusSerializer(serializers.ModelSerializer):
+    station_name = serializers.CharField(
+        source="station.station_name",
+        read_only=True,
+    )
+    slot_name = serializers.CharField(
+        source="slot.slot_name",
+        read_only=True,
+    )
+
+    class Meta:
+        model = StationSlotStatus
+        fields = "__all__"

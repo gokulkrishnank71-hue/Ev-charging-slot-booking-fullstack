@@ -13,7 +13,6 @@ from django.views.decorators.http import require_POST
 from django.utils import timezone
 
 from owner_app.models import EVStation
-from home.decorators import client_required
 from staff_app.models import StationSlotStatus
 from .models import Booking
 
@@ -56,7 +55,6 @@ def slot_has_ended(booking_date, slot_definition, current_time=None):
 # Client Dashboard View
 # Displays the main dashboard for EV Point clients
 # ==================================================
-@client_required
 def client_dashboard(request):
 
     return render(request,'client_dashboard.html' )
@@ -65,7 +63,6 @@ def client_dashboard(request):
 # Membership Plans View
 # Displays available subscription plans for users
 # ==================================================
-@client_required
 def plans_list(request):
     return render(request, 'plans_list.html')
 
@@ -73,7 +70,6 @@ def plans_list(request):
 # Station Search View
 # Displays all active EV charging stations
 # ==================================================
-@client_required
 def station_search(request):
 
     # Retrieve all active charging stations
@@ -101,7 +97,6 @@ def station_search(request):
 # Book Charging Slot View
 # Handles slot booking and availability management
 # ==================================================
-@client_required
 def book_now(request, station_id):
     # Retrieve selected charging station
     station = get_object_or_404(EVStation, station_id=station_id, is_active=True)
@@ -217,14 +212,13 @@ def book_now(request, station_id):
     })
 
 
-@client_required
+
 def my_bookings(request):
     bookings = Booking.objects.filter(user=request.user).select_related('station')
     return render(request, 'my_bookings.html', {'bookings': bookings})
 
 
 @require_POST
-@client_required
 def cancel_booking(request, booking_id):
     booking = get_object_or_404(Booking, pk=booking_id, user=request.user)
     if booking.status not in (Booking.Status.PENDING, Booking.Status.CONFIRMED):

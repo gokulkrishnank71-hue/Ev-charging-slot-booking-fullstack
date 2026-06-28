@@ -1,7 +1,6 @@
 from django.urls import path
 
 from . import views
-from .apiviews import UserDetailAPIView, UserListAPIView
 
 
 urlpatterns = [
@@ -12,6 +11,4 @@ urlpatterns = [
     path('bookings/',views.my_bookings,name='my_bookings'),
     path('bookings/<int:booking_id>/cancel/',views.cancel_booking,name='cancel_booking'),
 
-    path('api/users/',UserListAPIView.as_view(),name='user-api-list'),
-    path('api/users/<int:pk>/',UserDetailAPIView.as_view(),name='user-api-detail'),
 ]

@@ -1,7 +1,6 @@
 from django.urls import path
 
 from . import views
-from .apiviews import StaffDetailAPIView, StaffListAPIView
 
 
 urlpatterns = [
@@ -11,6 +10,4 @@ urlpatterns = [
     path('slots/<int:slot_id>/status/',views.update_slot_status,name='update_slot_status'),
     path('bookings/<int:booking_id>/status/',views.update_booking_status,name='update_booking_status'),
 
-    path('api/staff/',StaffListAPIView.as_view(),name='staff-api-list'),
-    path('api/staff/<int:pk>/',StaffDetailAPIView.as_view(),name='staff-api-detail'),
 ]

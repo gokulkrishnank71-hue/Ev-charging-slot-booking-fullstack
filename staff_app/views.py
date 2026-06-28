@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 from client_app.models import Booking
-from home.decorators import staff_required
 from owner_app.models import EVStation, chargingslot
 
 from .models import StationSlotStatus
@@ -43,7 +42,6 @@ def staff_login(request):
     return render(request, 'staff_app/login.html')
 
 
-@staff_required
 def dashboard(request):
     profile = request.user.station_staff_profile
     if not profile.is_active:
@@ -73,7 +71,6 @@ def dashboard(request):
 
 
 @require_POST
-@staff_required
 def update_station_status(request):
     profile = request.user.station_staff_profile
     station = profile.station
@@ -95,7 +92,6 @@ def update_station_status(request):
 
 
 @require_POST
-@staff_required
 def update_slot_status(request, slot_id):
     profile = request.user.station_staff_profile
     slot = get_object_or_404(chargingslot, pk=slot_id)
@@ -119,7 +115,6 @@ def update_slot_status(request, slot_id):
 
 
 @require_POST
-@staff_required
 def update_booking_status(request, booking_id):
     profile = request.user.station_staff_profile
     booking = get_object_or_404(Booking, pk=booking_id, station=profile.station)

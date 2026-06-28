@@ -1,27 +1,21 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets
 
+from client_app.models import Booking
+from client_app.userserializer import (
+    BookingSerializer,
+    UserProfileSerializer,
+)
 from home.models import UserProfile
 
-from .userserializer import UserSerializer
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.select_related("user").all()
+    serializer_class = UserProfileSerializer
 
 
-class UserQuerysetMixin:
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        queryset = UserProfile.objects.select_related('user').order_by('id')
-
-        if self.request.user.is_staff:
-            return queryset
-
-        return queryset.filter(user=self.request.user)
-
-
-class UserListAPIView(UserQuerysetMixin, generics.ListAPIView):
-    pass
-
-
-class UserDetailAPIView(UserQuerysetMixin, generics.RetrieveAPIView):
-    pass
+class BookingViewSet(viewsets.ModelViewSet):
+    queryset = Booking.objects.select_related(
+        "user",
+        "station",
+    ).all().order_by("-pk")
+    serializer_class = BookingSerializer

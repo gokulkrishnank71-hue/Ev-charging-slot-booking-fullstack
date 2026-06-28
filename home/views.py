@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from .models import UserProfile, OwnerProfile
-from .decorators import client_required
 
 
 # ==================================================
@@ -111,7 +110,6 @@ def login(request):
 # Displays the main dashboard for logged-in clients
 # ==================================================
 
-@client_required
 def client_dashboard(request):
 
     # Allow access only to authenticated users

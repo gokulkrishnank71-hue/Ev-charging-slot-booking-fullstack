@@ -1,27 +1,24 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets
 
 from home.models import OwnerProfile
-
-from .ownerserializer import OwnerSerializer
-
-
-class OwnerQuerysetMixin:
-    serializer_class = OwnerSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        queryset = OwnerProfile.objects.select_related('user').order_by('id')
-
-        if self.request.user.is_staff:
-            return queryset
-
-        return queryset.filter(user=self.request.user)
+from owner_app.models import EVStation, chargingslot
+from owner_app.ownerserializer import (
+    ChargingSlotSerializer,
+    EVStationSerializer,
+    OwnerProfileSerializer,
+)
 
 
-class OwnerListAPIView(OwnerQuerysetMixin, generics.ListAPIView):
-    pass
+class OwnerProfileViewSet(viewsets.ModelViewSet):
+    queryset = OwnerProfile.objects.select_related("user").all()
+    serializer_class = OwnerProfileSerializer
 
 
-class OwnerDetailAPIView(OwnerQuerysetMixin, generics.RetrieveAPIView):
-    pass
+class EVStationViewSet(viewsets.ModelViewSet):
+    queryset = EVStation.objects.select_related("owner").all()
+    serializer_class = EVStationSerializer
+
+
+class ChargingSlotViewSet(viewsets.ModelViewSet):
+    queryset = chargingslot.objects.all().order_by("slot_id")
+    serializer_class = ChargingSlotSerializer
